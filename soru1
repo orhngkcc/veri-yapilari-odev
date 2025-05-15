@@ -1,0 +1,70 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define SIZE 500
+
+void insertionSort(int arr[], int n) {
+    int i, key, j;
+    for (i = 1; i < n; i++) {
+        key = arr[i];
+        j = i - 1;
+        while (j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j];
+            j = j - 1;
+        }
+        arr[j + 1] = key;
+    }
+}
+
+void selectionSort(int arr[], int n) {
+    int i, j, min_idx, temp;
+    for (i = 0; i < n-1; i++) {
+        min_idx = i;
+        for (j = i+1; j < n; j++)
+            if (arr[j] < arr[min_idx])
+                min_idx = j;
+        temp = arr[min_idx];
+        arr[min_idx] = arr[i];
+        arr[i] = temp;
+    }
+}
+
+void copyArray(int source[], int destination[], int size) {
+    for (int i = 0; i < size; i++) {
+        destination[i] = source[i];
+    }
+}
+
+int main() {
+    int original[SIZE], arr1[SIZE], arr2[SIZE];
+    srand(time(NULL));
+
+    // Rastgele dizi oluştur
+    for (int i = 0; i < SIZE; i++) {
+        original[i] = rand() % 1001; // 0-1000 arası
+    }
+
+    // Kopyalarını oluştur
+    copyArray(original, arr1, SIZE);
+    copyArray(original, arr2, SIZE);
+
+    clock_t start, end;
+    double cpu_time_used;
+
+    // Insertion Sort
+    start = clock();
+    insertionSort(arr1, SIZE);
+    end = clock();
+    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+    printf("Insertion Sort süresi: %f saniye\n", cpu_time_used);
+
+    // Selection Sort
+    start = clock();
+    selectionSort(arr2, SIZE);
+    end = clock();
+    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+    printf("Selection Sort süresi: %f saniye\n", cpu_time_used);
+
+    return 0;
+}
