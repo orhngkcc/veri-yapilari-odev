@@ -1,0 +1,78 @@
+Trie (Metin Ağacı) Nedir?
+Trie (veya prefix tree, Türkçede "metin ağacı"), genellikle kelime listelerini saklamak ve bu kelimelerle hızlı arama, ekleme ve silme işlemleri yapmak için kullanılan özel bir ağaç veri yapısıdır.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Trie Yapısının Özellikleri:
+1-Her düğüm bir karakteri temsil eder.
+
+2-Kök düğüm boş olur (genellikle bir karakter içermez).
+
+3-Kelimeler karakter karakter aşağıya doğru dallanarak yerleştirilir.
+
+4-Bir kelimenin sonunu göstermek için özel bir işaret (genellikle boolean bir flag: isEndOfWord) kullanılır.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+C Programlama Dili ile Trie Uygulaması
+------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+#define ALPHABET_SIZE 26
+
+// Trie düğümü
+typedef struct TrieNode {
+    struct TrieNode *children[ALPHABET_SIZE];
+    bool isEndOfWord;
+} TrieNode;
+
+// Yeni bir trie düğümü oluştur
+TrieNode *createNode() {
+    TrieNode *node = (TrieNode *)malloc(sizeof(TrieNode));
+    node->isEndOfWord = false;
+    for (int i = 0; i < ALPHABET_SIZE; i++)
+        node->children[i] = NULL;
+    return node;
+}
+
+// Trie'ye kelime ekle
+void insert(TrieNode *root, const char *word) {
+    TrieNode *p = root;
+    while (*word) {
+        int index = *word - 'a';
+        if (p->children[index] == NULL)
+            p->children[index] = createNode();
+        p = p->children[index];
+        word++;
+    }
+    p->isEndOfWord = true;
+}
+
+// Trie'de kelime ara
+bool search(TrieNode *root, const char *word) {
+    TrieNode *p = root;
+    while (*word) {
+        int index = *word - 'a';
+        if (p->children[index] == NULL)
+            return false;
+        p = p->children[index];
+        word++;
+    }
+    return p != NULL && p->isEndOfWord;
+}
+
+// Ana program
+int main() {
+    TrieNode *root = createNode();
+
+    insert(root, "cat");
+    insert(root, "cap");
+    insert(root, "can");
+
+    printf("cat -> %s\n", search(root, "cat") ? "bulundu" : "bulunamadı");
+    printf("cap -> %s\n", search(root, "cap") ? "bulundu" : "bulunamadı");
+    printf("can -> %s\n", search(root, "can") ? "bulundu" : "bulunamadı");
+    printf("car -> %s\n", search(root, "car") ? "bulundu" : "bulunamadı");
+
+    return 0;
+}
+
