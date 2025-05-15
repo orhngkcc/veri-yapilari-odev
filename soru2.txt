@@ -1,0 +1,38 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Karşılaştırma fonksiyonu (küçükten büyüğe)
+int compare(const void *a, const void *b) {
+    return (*(int*)a - *(int*)b);
+}
+
+void özelSırala(int arr[], int n, int sonuc[]) {
+    // Diziyi küçükten büyüğe sırala
+    qsort(arr, n, sizeof(int), compare);
+
+    int start = 0;
+    int end = n - 1;
+    int index = 0;
+
+    while (start <= end) {
+        if (index < n)
+            sonuc[index++] = arr[end--]; // en büyük
+        if (index < n)
+            sonuc[index++] = arr[start++]; // en küçük
+    }
+}
+
+int main() {
+    int dizi[] = {60, 80, 3, 9, 57, 11};
+    int n = sizeof(dizi) / sizeof(dizi[0]);
+    int sonuc[n];
+
+    özelSırala(dizi, n, sonuc);
+
+    printf("Özel sıralanmış dizi: ");
+    for (int i = 0; i < n; i++) {
+        printf("%d ", sonuc[i]);
+    }
+
+    return 0;
+}
